@@ -1,0 +1,21 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        "location",
+        "configurable"
+    ],
+    "companyName": "IHM 2015",
+    "longName": "Pebble IHM",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "2",
+    "shortName": "Pebble IHM",
+    "uuid": "d020ff3c-27d7-4889-bcd5-13e98edfb1d3",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
