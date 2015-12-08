@@ -191,6 +191,7 @@ void received_handler(DictionaryIterator *iter, void *context) {
   text_layer_set_text(output_layer, text);
 }
 
+// Up action
 void up_click_handler(ClickRecognizerRef recognizer, void *context) {
   counter = (counter + 1) % NUMBER_OF_ITEMS;
   APP_LOG(APP_LOG_LEVEL_INFO, "Sending request id : %d", counter);
