@@ -474,16 +474,16 @@ void up_main_click_handler(ClickRecognizerRef recognizer, void *context) {
   int val = 0;
   switch(currentScreen) {
     case 0:
-      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+      val = persist_read_int(PERSIST_SCREEN1, nbItem);
     break;
     case 1:
-      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+      val = persist_read_int(PERSIST_SCREEN2, nbItem);
     break;
     case 2:
-      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+      val = persist_read_int(PERSIST_SCREEN3, nbItem);
     break;
     case 3:
-      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+      val = persist_read_int(PERSIST_SCREEN4, nbItem);
     break;
   }
   
@@ -503,16 +503,16 @@ void down_main_click_handler(ClickRecognizerRef recognizer, void *context) {
   int val = 0;
   switch(currentScreen) {
     case 0:
-      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+      val = persist_read_int(PERSIST_SCREEN1, nbItem);
     break;
     case 1:
-      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+      val = persist_read_int(PERSIST_SCREEN2, nbItem);
     break;
     case 2:
-      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+      val = persist_read_int(PERSIST_SCREEN3, nbItem);
     break;
     case 3:
-      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+      val = persist_read_int(PERSIST_SCREEN4, nbItem);
     break;
   }
   
@@ -590,19 +590,19 @@ static void config_window_load(Window *window) {
   switch(currentScreen) {
     case 0:
       nbItem = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
-      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+      val = persist_read_int(PERSIST_SCREEN1, nbItem);
     break;
     case 1:
       nbItem = persist_read_int(PERSIST_SCREEN2) ? persist_read_int(PERSIST_SCREEN2) : 0;
-      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+      val = persist_read_int(PERSIST_SCREEN2, nbItem);
     break;
     case 2:
       nbItem = persist_read_int(PERSIST_SCREEN3) ? persist_read_int(PERSIST_SCREEN3) : 0;
-      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+      val = persist_read_int(PERSIST_SCREEN3, nbItem);
     break;
     case 3:
       nbItem = persist_read_int(PERSIST_SCREEN4) ? persist_read_int(PERSIST_SCREEN4) : 0;
-      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+      val = persist_read_int(PERSIST_SCREEN4, nbItem);
     break;
   }
   
