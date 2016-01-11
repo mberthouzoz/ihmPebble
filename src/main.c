@@ -277,7 +277,11 @@ void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 
 // Up action
 void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
-  nbItem = (nbItem + 1) % NUMBER_OF_ITEMS;
+  if (nbItem + 1 > 15) {
+    nbItem = 0;
+  } else {
+    nbItem = nbItem + 1;
+  }
   APP_LOG(APP_LOG_LEVEL_INFO, "Sending request id : %d", counter);
  /* if (nbItem < 13) {
 	  send(counter, "");
@@ -341,8 +345,12 @@ void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
 
 // down click
 void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
-  nbItem = (nbItem - 1) % NUMBER_OF_ITEMS;
-  APP_LOG(APP_LOG_LEVEL_INFO, "Sending request id : %d", counter);
+  if (nbItem - 1 < 0) {
+    nbItem = 15;
+  } else {
+    nbItem = nbItem - 1;
+  }
+  APP_LOG(APP_LOG_LEVEL_INFO, "DOWN : Sending request id : %d", nbItem);
   /*if (counter < 13) {
 	  send(counter, "");
   }*/
@@ -444,13 +452,65 @@ static void config_click_config_provider(void *context) {
 static void config_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
-  
-  strcpy(text, "Hello");
-  text_layer_set_text(output_layer, text);
 
   window_set_click_config_provider(window, config_click_config_provider);
 
   output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
+  int item = 0;
+  switch (item) {
+    case REQUEST_LOCATION:
+      strcpy(text, "Request for:\nLOCATION\nsent");
+      break;
+    case REQUEST_FIX_LOCATION:
+      strcpy(text, "Request for:\nFIXING TARGET\nsent");
+      break;
+    case REQUEST_START_THREADED_LOCATION:
+      strcpy(text, "Request for:\nSTART THREAD NAVIGATION\nsent");
+      break;
+    case REQUEST_STOP_THREADED_LOCATION:
+      strcpy(text, "Request for:\nSTOP THREAD NAVIGATION\nsent");
+      break;
+    case REQUEST_ELEVATION:
+      strcpy(text, "Request for:\nELEVATION\nsent");
+      break;
+    case REQUEST_WEATHER_STATUS:
+      strcpy(text, "Request for:\nWEATHER_STATUS\nsent");
+      break;
+    case REQUEST_WEATHER_TEMPERATURE:
+      strcpy(text, "Request for:\nTEMPERATURE\nsent");
+      break;
+    case REQUEST_WEATHER_PRESSURE:
+      strcpy(text, "Request for:\nPRESSURE\nsent");
+      break;
+    case REQUEST_WEATHER_HUMIDITY:
+      strcpy(text, "Request for:\nHUMIDITY\nsent");
+      break;
+    case REQUEST_WEATHER_WIND:
+      strcpy(text, "Request for:\nWIND\nsent");
+      break;
+    case REQUEST_WEATHER_SUNRISE:
+      strcpy(text, "Request for:\nSUNRISE\nsent");
+      break;
+    case REQUEST_WEATHER_SUNSET:
+      strcpy(text, "Request for:\nSUNSET\nsent");
+      break;
+    case REQUEST_TRANSPORT:
+      strcpy(text, "Request for:\nTRANSPORT\nsent");
+      break;
+    case SHOW_UP_TIME:
+      strcpy(text, "Mode:\nSHOW_UP_TIME\nset");
+      break;
+    case SHOW_ACTIVE_TIME:
+      strcpy(text, "Mode:\nSHOW_ACTIVE_TIME\nset");
+      break;
+    case SHOW_BATTERY_STATE:
+      strcpy(text, "Mode:\nSHOW_BATTERY_STATE\nset");
+      break;
+    default:
+      strcpy(text, "Error.\nPlease check if NUMBER_OF_ITEMS is OK");
+      break;
+  }
+  text_layer_set_text(output_layer, text);
   layer_add_child(window_layer, text_layer_get_layer(output_layer));
 }
 
