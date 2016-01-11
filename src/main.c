@@ -63,7 +63,10 @@ typedef struct {
 } ScreenInfo;
 
 enum {
-  PERSIST_SCREEN // Persistent storage key for configuration
+  PERSIST_SCREEN1,
+  PERSIST_SCREEN2,
+  PERSIST_SCREEN3,
+  PERSIST_SCREEN4
 };
 
 
@@ -73,6 +76,8 @@ ScreenInfo screen_array[] = {
    {"SCREEN 3"},
    {"SCREEN 4"}
 };
+
+int currentScreen = 0;
 
 int counter = -1;
 
@@ -89,6 +94,7 @@ static void select_callback(struct MenuLayer *s_menu_layer, MenuIndex *cell_inde
                             void *callback_context) {
 
   // Switch to config window
+  currentScreen = cell_index->row;
   window_stack_push(config_window, false);
 }
 
@@ -282,11 +288,8 @@ void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
   } else {
     nbItem = nbItem + 1;
   }
-  APP_LOG(APP_LOG_LEVEL_INFO, "Sending request id : %d", counter);
- /* if (nbItem < 13) {
-	  send(counter, "");
-  }*/
-
+  APP_LOG(APP_LOG_LEVEL_INFO, "UP : Sending request id : %d", nbItem);
+ 
   switch (nbItem) {
     case REQUEST_LOCATION:
       strcpy(text, "Request for:\nLOCATION\nsent");
@@ -432,8 +435,21 @@ static void main_window_unload(Window *window) {
 
 static void config_click_handler(ClickRecognizerRef recognizer, void *context) {
   // Exit app after tea is done
-  strcpy(text, "Config");
-  text_layer_set_text(output_layer, text);
+  APP_LOG(APP_LOG_LEVEL_INFO, "Current screen and nbItem : %d %d", currentScreen, nbItem);
+  switch(currentScreen) {
+    case 0:
+      nbItem = persist_write_int(PERSIST_SCREEN1, nbItem);
+    break;
+    case 1:
+      nbItem = persist_write_int(PERSIST_SCREEN2, nbItem);
+    break;
+    case 2:
+      nbItem = persist_write_int(PERSIST_SCREEN3, nbItem);
+    break;
+    case 3:
+      nbItem = persist_write_int(PERSIST_SCREEN4, nbItem);
+    break;
+  }
 }
 
 static void config_back_click_handler(ClickRecognizerRef recognizer, void *context) {
@@ -456,8 +472,24 @@ static void config_window_load(Window *window) {
   window_set_click_config_provider(window, config_click_config_provider);
 
   output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
-  int item = 0;
-  switch (item) {
+  switch(currentScreen) {
+    case 0:
+      nbItem = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
+    break;
+    case 1:
+      nbItem = persist_read_int(PERSIST_SCREEN2) ? persist_read_int(PERSIST_SCREEN2) : 0;
+    break;
+    case 2:
+      nbItem = persist_read_int(PERSIST_SCREEN3) ? persist_read_int(PERSIST_SCREEN3) : 0;
+    break;
+    case 3:
+      nbItem = persist_read_int(PERSIST_SCREEN4) ? persist_read_int(PERSIST_SCREEN4) : 0;
+    break;
+  }
+  
+  APP_LOG(APP_LOG_LEVEL_INFO, "Config load : %d %d", currentScreen, nbItem);
+  
+  switch (nbItem) {
     case REQUEST_LOCATION:
       strcpy(text, "Request for:\nLOCATION\nsent");
       break;
