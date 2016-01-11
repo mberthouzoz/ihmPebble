@@ -491,52 +491,52 @@ static void config_window_load(Window *window) {
   
   switch (nbItem) {
     case REQUEST_LOCATION:
-      strcpy(text, "Request for:\nLOCATION\nsent");
+      strcpy(text, "LOCATION");
       break;
     case REQUEST_FIX_LOCATION:
-      strcpy(text, "Request for:\nFIXING TARGET\nsent");
+      strcpy(text, "FIXING TARGET");
       break;
     case REQUEST_START_THREADED_LOCATION:
-      strcpy(text, "Request for:\nSTART THREAD NAVIGATION\nsent");
+      strcpy(text, "START THREAD NAVIGATION");
       break;
     case REQUEST_STOP_THREADED_LOCATION:
-      strcpy(text, "Request for:\nSTOP THREAD NAVIGATION\nsent");
+      strcpy(text, "STOP THREAD NAVIGATION");
       break;
     case REQUEST_ELEVATION:
-      strcpy(text, "Request for:\nELEVATION\nsent");
+      strcpy(text, "ELEVATION");
       break;
     case REQUEST_WEATHER_STATUS:
-      strcpy(text, "Request for:\nWEATHER_STATUS\nsent");
+      strcpy(text, "WEATHER_STATUS");
       break;
     case REQUEST_WEATHER_TEMPERATURE:
-      strcpy(text, "Request for:\nTEMPERATURE\nsent");
+      strcpy(text, "TEMPERATURE");
       break;
     case REQUEST_WEATHER_PRESSURE:
-      strcpy(text, "Request for:\nPRESSURE\nsent");
+      strcpy(text, "PRESSURE");
       break;
     case REQUEST_WEATHER_HUMIDITY:
-      strcpy(text, "Request for:\nHUMIDITY\nsent");
+      strcpy(text, "HUMIDITY");
       break;
     case REQUEST_WEATHER_WIND:
-      strcpy(text, "Request for:\nWIND\nsent");
+      strcpy(text, "WIND");
       break;
     case REQUEST_WEATHER_SUNRISE:
-      strcpy(text, "Request for:\nSUNRISE\nsent");
+      strcpy(text, "SUNRISE");
       break;
     case REQUEST_WEATHER_SUNSET:
-      strcpy(text, "Request for:\nSUNSET\nsent");
+      strcpy(text, "SUNSET");
       break;
     case REQUEST_TRANSPORT:
-      strcpy(text, "Request for:\nTRANSPORT\nsent");
+      strcpy(text, "TRANSPORT");
       break;
     case SHOW_UP_TIME:
-      strcpy(text, "Mode:\nSHOW_UP_TIME\nset");
+      strcpy(text, "SHOW_UP_TIME");
       break;
     case SHOW_ACTIVE_TIME:
-      strcpy(text, "Mode:\nSHOW_ACTIVE_TIME\nset");
+      strcpy(text, "SHOW_ACTIVE_TIME");
       break;
     case SHOW_BATTERY_STATE:
-      strcpy(text, "Mode:\nSHOW_BATTERY_STATE\nset");
+      strcpy(text, "SHOW_BATTERY_STATE");
       break;
     default:
       strcpy(text, "Error.\nPlease check if NUMBER_OF_ITEMS is OK");
