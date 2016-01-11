@@ -289,6 +289,34 @@ void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
     nbItem = nbItem + 1;
   }
   APP_LOG(APP_LOG_LEVEL_INFO, "UP : Sending request id : %d", nbItem);
+  
+  int val = -1;
+  switch(currentScreen) {
+    case 0:
+      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+    break;
+    case 1:
+      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+    break;
+    case 2:
+      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+    break;
+    case 3:
+      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+    break;
+  }
+  
+   APP_LOG(APP_LOG_LEVEL_INFO, "Before UP valid, %d, %d == %d", val, nbItem, val);
+  
+  if (val != -1 && nbItem == val) {
+    text_layer_set_text_color(output_layer, GColorWhite);
+    text_layer_set_background_color(output_layer, GColorBlack);
+    window_set_background_color(config_window, GColorBlack);
+  } else {
+    text_layer_set_text_color(output_layer, GColorBlack);
+    text_layer_set_background_color(output_layer, GColorWhite);
+    window_set_background_color(config_window, GColorWhite);
+  }
  
   switch (nbItem) {
     case REQUEST_LOCATION:
@@ -355,6 +383,31 @@ void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
     nbItem = nbItem - 1;
   }
   APP_LOG(APP_LOG_LEVEL_INFO, "DOWN : Sending request id : %d", nbItem);
+  int val = -1;
+  switch(currentScreen) {
+    case 0:
+      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+    break;
+    case 1:
+      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+    break;
+    case 2:
+      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+    break;
+    case 3:
+      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+    break;
+  }
+  
+  if (val != -1 && nbItem == val) {
+    text_layer_set_text_color(output_layer, GColorWhite);
+    text_layer_set_background_color(output_layer, GColorBlack);
+    window_set_background_color(config_window, GColorBlack);
+  } else {
+    text_layer_set_text_color(output_layer, GColorBlack);
+    text_layer_set_background_color(output_layer, GColorWhite);
+    window_set_background_color(config_window, GColorWhite);
+  }
 
   switch (nbItem) {
     case REQUEST_LOCATION:
@@ -422,11 +475,11 @@ static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
+  output_layer = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
   int cpt = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
-  /*if (cpt < 13) {
+  if (cpt < 13) {
 	  send(cpt, "");
-  }*/
+  }
   text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(output_layer));
 }
@@ -474,22 +527,37 @@ static void config_window_load(Window *window) {
   window_set_click_config_provider(window, config_click_config_provider);
 
   output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
+  int val = -1;
   switch(currentScreen) {
     case 0:
       nbItem = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
+      val = persist_write_int(PERSIST_SCREEN1, nbItem);
     break;
     case 1:
       nbItem = persist_read_int(PERSIST_SCREEN2) ? persist_read_int(PERSIST_SCREEN2) : 0;
+      val = persist_write_int(PERSIST_SCREEN2, nbItem);
     break;
     case 2:
       nbItem = persist_read_int(PERSIST_SCREEN3) ? persist_read_int(PERSIST_SCREEN3) : 0;
+      val = persist_write_int(PERSIST_SCREEN3, nbItem);
     break;
     case 3:
       nbItem = persist_read_int(PERSIST_SCREEN4) ? persist_read_int(PERSIST_SCREEN4) : 0;
+      val = persist_write_int(PERSIST_SCREEN4, nbItem);
     break;
   }
   
   APP_LOG(APP_LOG_LEVEL_INFO, "Config load : %d %d", currentScreen, nbItem);
+
+  if (val != -1 && nbItem == val) {
+    text_layer_set_text_color(output_layer, GColorWhite);
+    text_layer_set_background_color(output_layer, GColorBlack);
+    window_set_background_color(config_window, GColorBlack);
+  } else {
+    text_layer_set_text_color(output_layer, GColorBlack);
+    text_layer_set_background_color(output_layer, GColorWhite);
+    window_set_background_color(config_window, GColorWhite);
+  }
   
   switch (nbItem) {
     case REQUEST_LOCATION:
