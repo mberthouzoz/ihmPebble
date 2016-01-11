@@ -344,6 +344,7 @@ void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
       break;
   }
   text_layer_set_text(output_layer, text);
+  text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
 }
 
 // down click
@@ -409,6 +410,7 @@ void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
       break;
   }
   text_layer_set_text(output_layer, text);
+  text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
 }
 
 void click_config_provider(void *context) {
@@ -543,6 +545,7 @@ static void config_window_load(Window *window) {
       break;
   }
   text_layer_set_text(output_layer, text);
+  text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(output_layer));
 }
 
