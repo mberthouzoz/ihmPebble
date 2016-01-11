@@ -292,52 +292,52 @@ void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
  
   switch (nbItem) {
     case REQUEST_LOCATION:
-      strcpy(text, "Request for:\nLOCATION\nsent");
+      strcpy(text, "LOCATION");
       break;
     case REQUEST_FIX_LOCATION:
-      strcpy(text, "Request for:\nFIXING TARGET\nsent");
+      strcpy(text, "FIXING TARGET");
       break;
     case REQUEST_START_THREADED_LOCATION:
-      strcpy(text, "Request for:\nSTART THREAD NAVIGATION\nsent");
+      strcpy(text, "START THREAD NAVIGATION");
       break;
     case REQUEST_STOP_THREADED_LOCATION:
-      strcpy(text, "Request for:\nSTOP THREAD NAVIGATION\nsent");
+      strcpy(text, "STOP THREAD NAVIGATION");
       break;
     case REQUEST_ELEVATION:
-      strcpy(text, "Request for:\nELEVATION\nsent");
+      strcpy(text, "ELEVATION");
       break;
     case REQUEST_WEATHER_STATUS:
-      strcpy(text, "Request for:\nWEATHER_STATUS\nsent");
+      strcpy(text, "WEATHER_STATUS");
       break;
     case REQUEST_WEATHER_TEMPERATURE:
-      strcpy(text, "Request for:\nTEMPERATURE\nsent");
+      strcpy(text, "TEMPERATURE");
       break;
     case REQUEST_WEATHER_PRESSURE:
-      strcpy(text, "Request for:\nPRESSURE\nsent");
+      strcpy(text, "PRESSURE");
       break;
     case REQUEST_WEATHER_HUMIDITY:
-      strcpy(text, "Request for:\nHUMIDITY\nsent");
+      strcpy(text, "HUMIDITY");
       break;
     case REQUEST_WEATHER_WIND:
-      strcpy(text, "Request for:\nWIND\nsent");
+      strcpy(text, "WIND");
       break;
     case REQUEST_WEATHER_SUNRISE:
-      strcpy(text, "Request for:\nSUNRISE\nsent");
+      strcpy(text, "SUNRISE");
       break;
     case REQUEST_WEATHER_SUNSET:
-      strcpy(text, "Request for:\nSUNSET\nsent");
+      strcpy(text, "SUNSET");
       break;
     case REQUEST_TRANSPORT:
-      strcpy(text, "Request for:\nTRANSPORT\nsent");
+      strcpy(text, "TRANSPORT");
       break;
     case SHOW_UP_TIME:
-      strcpy(text, "Mode:\nSHOW_UP_TIME\nset");
+      strcpy(text, "SHOW_UP_TIME");
       break;
     case SHOW_ACTIVE_TIME:
-      strcpy(text, "Mode:\nSHOW_ACTIVE_TIME\nset");
+      strcpy(text, "SHOW_ACTIVE_TIME");
       break;
     case SHOW_BATTERY_STATE:
-      strcpy(text, "Mode:\nSHOW_BATTERY_STATE\nset");
+      strcpy(text, "SHOW_BATTERY_STATE");
       break;
     default:
       strcpy(text, "Error.\nPlease check if NUMBER_OF_ITEMS is OK");
@@ -354,58 +354,55 @@ void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
     nbItem = nbItem - 1;
   }
   APP_LOG(APP_LOG_LEVEL_INFO, "DOWN : Sending request id : %d", nbItem);
-  /*if (counter < 13) {
-	  send(counter, "");
-  }*/
 
   switch (nbItem) {
     case REQUEST_LOCATION:
-      strcpy(text, "Request for:\nLOCATION\nsent");
+      strcpy(text, "LOCATION");
       break;
     case REQUEST_FIX_LOCATION:
-      strcpy(text, "Request for:\nFIXING TARGET\nsent");
+      strcpy(text, "FIXING TARGET");
       break;
     case REQUEST_START_THREADED_LOCATION:
-      strcpy(text, "Request for:\nSTART THREAD NAVIGATION\nsent");
+      strcpy(text, "START THREAD NAVIGATION");
       break;
     case REQUEST_STOP_THREADED_LOCATION:
-      strcpy(text, "Request for:\nSTOP THREAD NAVIGATION\nsent");
+      strcpy(text, "STOP THREAD NAVIGATION");
       break;
     case REQUEST_ELEVATION:
-      strcpy(text, "Request for:\nELEVATION\nsent");
+      strcpy(text, "ELEVATION");
       break;
     case REQUEST_WEATHER_STATUS:
-      strcpy(text, "Request for:\nWEATHER_STATUS\nsent");
+      strcpy(text, "WEATHER_STATUS");
       break;
     case REQUEST_WEATHER_TEMPERATURE:
-      strcpy(text, "Request for:\nTEMPERATURE\nsent");
+      strcpy(text, "TEMPERATURE");
       break;
     case REQUEST_WEATHER_PRESSURE:
-      strcpy(text, "Request for:\nPRESSURE\nsent");
+      strcpy(text, "PRESSURE");
       break;
     case REQUEST_WEATHER_HUMIDITY:
-      strcpy(text, "Request for:\nHUMIDITY\nsent");
+      strcpy(text, "HUMIDITY");
       break;
     case REQUEST_WEATHER_WIND:
-      strcpy(text, "Request for:\nWIND\nsent");
+      strcpy(text, "WIND");
       break;
     case REQUEST_WEATHER_SUNRISE:
-      strcpy(text, "Request for:\nSUNRISE\nsent");
+      strcpy(text, "SUNRISE");
       break;
     case REQUEST_WEATHER_SUNSET:
-      strcpy(text, "Request for:\nSUNSET\nsent");
+      strcpy(text, "SUNSET");
       break;
     case REQUEST_TRANSPORT:
-      strcpy(text, "Request for:\nTRANSPORT\nsent");
+      strcpy(text, "TRANSPORT");
       break;
     case SHOW_UP_TIME:
-      strcpy(text, "Mode:\nSHOW_UP_TIME\nset");
+      strcpy(text, "SHOW_UP_TIME");
       break;
     case SHOW_ACTIVE_TIME:
-      strcpy(text, "Mode:\nSHOW_ACTIVE_TIME\nset");
+      strcpy(text, "SHOW_ACTIVE_TIME");
       break;
     case SHOW_BATTERY_STATE:
-      strcpy(text, "Mode:\nSHOW_BATTERY_STATE\nset");
+      strcpy(text, "SHOW_BATTERY_STATE");
       break;
     default:
       strcpy(text, "Error.\nPlease check if NUMBER_OF_ITEMS is OK");
@@ -424,7 +421,10 @@ static void main_window_load(Window *window) {
   GRect bounds = layer_get_bounds(window_layer);
 
   output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
-  text_layer_set_text(output_layer, "Welcome Pebble :-)\nPlease UP click !");
+  int cpt = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
+  /*if (cpt < 13) {
+	  send(cpt, "");
+  }*/
   text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(output_layer));
 }
@@ -563,10 +563,10 @@ static void init(void) {
   window_stack_push(main_window, true);
   
    s_menu_window = window_create();
-    window_set_window_handlers(s_menu_window, (WindowHandlers){
-      .load = menu_window_load,
-      .unload = menu_window_unload,
-    });
+   window_set_window_handlers(s_menu_window, (WindowHandlers){
+     .load = menu_window_load,
+     .unload = menu_window_unload,
+   });
   
   config_window = window_create();
   window_set_window_handlers(config_window, (WindowHandlers){
