@@ -62,6 +62,10 @@ typedef struct {
   char name[16];  // Name of this tea
 } ScreenInfo;
 
+enum {
+  PERSIST_SCREEN // Persistent storage key for configuration
+};
+
 
 ScreenInfo screen_array[] = {
    {"SCREEN 1"},
@@ -71,13 +75,14 @@ ScreenInfo screen_array[] = {
 };
 
 int counter = -1;
+
+int nbItem = 0;
+
 char text[MAX_TEXT_SIZE];
 unsigned long int up_time = 0;      //in seconds
 unsigned long int active_time = 0;  //in seconds/10
 
 static char s_screen_text[32];
-
-ClickConfigProvider previous_ccp;   
 
 // menu select
 static void select_callback(struct MenuLayer *s_menu_layer, MenuIndex *cell_index, 
@@ -155,8 +160,7 @@ static void menu_window_load(Window *window) {
     .get_num_rows = num_rows_callback,
     .get_cell_height = get_cell_height_callback,
     .draw_row = draw_row_handler,
-    .select_click = select_callback,
-    .back_click = back_callback
+    .select_click = select_callback
   }); 
   menu_layer_set_click_config_onto_window(s_menu_layer,	window);
   layer_add_child(window_layer, menu_layer_get_layer(s_menu_layer));
@@ -272,14 +276,78 @@ void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 // Up action
-void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-  counter = (counter + 1) % NUMBER_OF_ITEMS;
+void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
+  nbItem = (nbItem + 1) % NUMBER_OF_ITEMS;
   APP_LOG(APP_LOG_LEVEL_INFO, "Sending request id : %d", counter);
-  if (counter < 13) {
+ /* if (nbItem < 13) {
 	  send(counter, "");
-  }
+  }*/
 
-  switch (counter) {
+  switch (nbItem) {
+    case REQUEST_LOCATION:
+      strcpy(text, "Request for:\nLOCATION\nsent");
+      break;
+    case REQUEST_FIX_LOCATION:
+      strcpy(text, "Request for:\nFIXING TARGET\nsent");
+      break;
+    case REQUEST_START_THREADED_LOCATION:
+      strcpy(text, "Request for:\nSTART THREAD NAVIGATION\nsent");
+      break;
+    case REQUEST_STOP_THREADED_LOCATION:
+      strcpy(text, "Request for:\nSTOP THREAD NAVIGATION\nsent");
+      break;
+    case REQUEST_ELEVATION:
+      strcpy(text, "Request for:\nELEVATION\nsent");
+      break;
+    case REQUEST_WEATHER_STATUS:
+      strcpy(text, "Request for:\nWEATHER_STATUS\nsent");
+      break;
+    case REQUEST_WEATHER_TEMPERATURE:
+      strcpy(text, "Request for:\nTEMPERATURE\nsent");
+      break;
+    case REQUEST_WEATHER_PRESSURE:
+      strcpy(text, "Request for:\nPRESSURE\nsent");
+      break;
+    case REQUEST_WEATHER_HUMIDITY:
+      strcpy(text, "Request for:\nHUMIDITY\nsent");
+      break;
+    case REQUEST_WEATHER_WIND:
+      strcpy(text, "Request for:\nWIND\nsent");
+      break;
+    case REQUEST_WEATHER_SUNRISE:
+      strcpy(text, "Request for:\nSUNRISE\nsent");
+      break;
+    case REQUEST_WEATHER_SUNSET:
+      strcpy(text, "Request for:\nSUNSET\nsent");
+      break;
+    case REQUEST_TRANSPORT:
+      strcpy(text, "Request for:\nTRANSPORT\nsent");
+      break;
+    case SHOW_UP_TIME:
+      strcpy(text, "Mode:\nSHOW_UP_TIME\nset");
+      break;
+    case SHOW_ACTIVE_TIME:
+      strcpy(text, "Mode:\nSHOW_ACTIVE_TIME\nset");
+      break;
+    case SHOW_BATTERY_STATE:
+      strcpy(text, "Mode:\nSHOW_BATTERY_STATE\nset");
+      break;
+    default:
+      strcpy(text, "Error.\nPlease check if NUMBER_OF_ITEMS is OK");
+      break;
+  }
+  text_layer_set_text(output_layer, text);
+}
+
+// down click
+void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
+  nbItem = (nbItem - 1) % NUMBER_OF_ITEMS;
+  APP_LOG(APP_LOG_LEVEL_INFO, "Sending request id : %d", counter);
+  /*if (counter < 13) {
+	  send(counter, "");
+  }*/
+
+  switch (nbItem) {
     case REQUEST_LOCATION:
       strcpy(text, "Request for:\nLOCATION\nsent");
       break;
@@ -336,7 +404,7 @@ void up_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 void click_config_provider(void *context) {
-	window_single_click_subscribe(BUTTON_ID_UP, up_click_handler);
+	//window_single_click_subscribe(BUTTON_ID_UP, up_click_handler);
 	window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
 }
 
@@ -368,14 +436,17 @@ static void config_back_click_handler(ClickRecognizerRef recognizer, void *conte
 
 static void config_click_config_provider(void *context) {
   window_single_click_subscribe(BUTTON_ID_SELECT, config_click_handler);
-  window_single_click_subscribe(BUTTON_ID_UP, config_click_handler);
-  window_single_click_subscribe(BUTTON_ID_DOWN, config_click_handler);
+  window_single_click_subscribe(BUTTON_ID_UP, up_click_config_handler);
+  window_single_click_subscribe(BUTTON_ID_DOWN, down_click_config_handler);
   window_single_click_subscribe(BUTTON_ID_BACK, config_back_click_handler);
 }
 
 static void config_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
+  
+  strcpy(text, "Hello");
+  text_layer_set_text(output_layer, text);
 
   window_set_click_config_provider(window, config_click_config_provider);
 
