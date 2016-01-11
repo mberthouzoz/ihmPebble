@@ -293,16 +293,16 @@ void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
   int val = -1;
   switch(currentScreen) {
     case 0:
-      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+      val = persist_read_int(PERSIST_SCREEN1, nbItem);
     break;
     case 1:
-      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+      val = persist_read_int(PERSIST_SCREEN2, nbItem);
     break;
     case 2:
-      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+      val = persist_read_int(PERSIST_SCREEN3, nbItem);
     break;
     case 3:
-      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+      val = persist_read_int(PERSIST_SCREEN4, nbItem);
     break;
   }
   
@@ -386,16 +386,16 @@ void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
   int val = -1;
   switch(currentScreen) {
     case 0:
-      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+      val = persist_read_int(PERSIST_SCREEN1, nbItem);
     break;
     case 1:
-      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+      val = persist_read_int(PERSIST_SCREEN2, nbItem);
     break;
     case 2:
-      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+      val = persist_read_int(PERSIST_SCREEN3, nbItem);
     break;
     case 3:
-      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+      val = persist_read_int(PERSIST_SCREEN4, nbItem);
     break;
   }
   
@@ -465,7 +465,12 @@ void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
   text_layer_set_text(output_layer, text);
   text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
 }
-void nav_main_click_handler(ClickRecognizerRef recognizer, void *context) {
+void up_main_click_handler(ClickRecognizerRef recognizer, void *context) {
+  if (currentScreen + 1 > 3) {
+    currentScreen = 0;
+  } else {
+    currentScreen = currentScreen + 1;
+  }
   int val = 0;
   switch(currentScreen) {
     case 0:
@@ -483,14 +488,44 @@ void nav_main_click_handler(ClickRecognizerRef recognizer, void *context) {
   }
   
   if (val < 13) {
+    APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", val);
+	  send(val, "");
+  }
+  
+}
+
+void down_main_click_handler(ClickRecognizerRef recognizer, void *context) {
+  if (currentScreen - 1 < 0) {
+    currentScreen = 3;
+  } else {
+    currentScreen = currentScreen - 1;
+  }
+  int val = 0;
+  switch(currentScreen) {
+    case 0:
+      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+    break;
+    case 1:
+      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+    break;
+    case 2:
+      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+    break;
+    case 3:
+      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+    break;
+  }
+  
+  if (val < 13) {
+    APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", val);
 	  send(val, "");
   }
   
 }
 
 void click_config_provider(void *context) {
-	window_single_click_subscribe(BUTTON_ID_UP, nav_main_click_handler);
-  window_single_click_subscribe(BUTTON_ID_DOWN, nav_main_click_handler);
+	window_single_click_subscribe(BUTTON_ID_UP, up_main_click_handler);
+  window_single_click_subscribe(BUTTON_ID_DOWN, down_main_click_handler);
 	window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
 }
 
@@ -501,6 +536,7 @@ static void main_window_load(Window *window) {
   output_layer = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
   int cpt = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
   if (cpt < 13) {
+    APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", cpt);
 	  send(cpt, "");
   }
   text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
