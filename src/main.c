@@ -465,9 +465,32 @@ void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
   text_layer_set_text(output_layer, text);
   text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
 }
+void nav_main_click_handler(ClickRecognizerRef recognizer, void *context) {
+  int val = 0;
+  switch(currentScreen) {
+    case 0:
+      val = persist_write_int(PERSIST_SCREEN1, nbItem);
+    break;
+    case 1:
+      val = persist_write_int(PERSIST_SCREEN2, nbItem);
+    break;
+    case 2:
+      val = persist_write_int(PERSIST_SCREEN3, nbItem);
+    break;
+    case 3:
+      val = persist_write_int(PERSIST_SCREEN4, nbItem);
+    break;
+  }
+  
+  if (val < 13) {
+	  send(val, "");
+  }
+  
+}
 
 void click_config_provider(void *context) {
-	//window_single_click_subscribe(BUTTON_ID_UP, up_click_handler);
+	window_single_click_subscribe(BUTTON_ID_UP, nav_main_click_handler);
+  window_single_click_subscribe(BUTTON_ID_DOWN, nav_main_click_handler);
 	window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
 }
 
