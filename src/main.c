@@ -84,6 +84,7 @@ int counter = -1;
 int nbItem = 0;
 
 char text[MAX_TEXT_SIZE];
+char window_number[MAX_TEXT_SIZE];
 unsigned long int up_time = 0;      //in seconds
 unsigned long int active_time = 0;  //in seconds/10
 
@@ -278,6 +279,8 @@ void received_handler(DictionaryIterator *iter, void *context) {
 void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   strcpy(text, "");
   text_layer_set_text(output_layer, text);
+  text_layer_set_text(number_layer, text);
+  text_layer_set_background_color(number_layer, GColorWhite);
   menu_window_load(main_window);
 }
 
@@ -487,6 +490,24 @@ void up_main_click_handler(ClickRecognizerRef recognizer, void *context) {
   } else {
     currentScreen = currentScreen + 1;
   }
+  
+   switch(currentScreen) {
+    case 0:
+      strcpy(window_number, "Screen 1");
+    break;
+    case 1:
+      strcpy(window_number, "Screen 2");
+    break;
+    case 2:
+      strcpy(window_number, "Screen 3");
+    break;
+    case 3:
+      strcpy(window_number, "Screen 4");
+    break;
+  }
+  
+  text_layer_set_text(number_layer, window_number);
+  
   int val = 0;
  switch(currentScreen) {
     case 0:
@@ -524,6 +545,25 @@ void down_main_click_handler(ClickRecognizerRef recognizer, void *context) {
   } else {
     currentScreen = currentScreen - 1;
   }
+  
+  switch(currentScreen) {
+    case 0:
+      strcpy(window_number, "Screen 1");
+    break;
+    case 1:
+      strcpy(window_number, "Screen 2");
+    break;
+    case 2:
+      strcpy(window_number, "Screen 3");
+    break;
+    case 3:
+      strcpy(window_number, "Screen 4");
+    break;
+  }
+  
+  text_layer_set_text(number_layer, window_number);
+
+  
   int val = 0;
   switch(currentScreen) {
     case 0:
@@ -564,8 +604,7 @@ void click_config_provider(void *context) {
 static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
-  
-  char window_number[MAX_TEXT_SIZE];
+
   switch(currentScreen) {
     case 0:
       strcpy(window_number, "Screen 1");
@@ -580,13 +619,14 @@ static void main_window_load(Window *window) {
       strcpy(window_number, "Screen 4");
     break;
   }
+  
+  APP_LOG(APP_LOG_LEVEL_INFO, "Window : %s", window_number);
   number_layer = text_layer_create(GRect(0, 0, bounds.size.w, 19)); // Change if you use PEBBLE_SDK 3
   text_layer_set_text(number_layer, window_number);
   text_layer_set_text_alignment(number_layer, GTextAlignmentCenter);
   text_layer_set_text_color(number_layer, GColorWhite);
   text_layer_set_background_color(number_layer, GColorBlack);
   layer_add_child(window_layer, text_layer_get_layer(number_layer));
-
 
   output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
   int cpt = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
@@ -600,6 +640,7 @@ static void main_window_load(Window *window) {
 
 static void main_window_unload(Window *window) {
   text_layer_destroy(output_layer);
+  text_layer_destroy(number_layer);
 }
 
 static void config_click_handler(ClickRecognizerRef recognizer, void *context) {
@@ -729,6 +770,13 @@ static void config_window_load(Window *window) {
   text_layer_set_text(output_layer, text);
   text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(output_layer));
+  
+  number_layer = text_layer_create(GRect(0, 0, bounds.size.w, 19)); // Change if you use PEBBLE_SDK 3
+  text_layer_set_text(number_layer, "Choose the item");
+  text_layer_set_text_alignment(number_layer, GTextAlignmentCenter);
+  text_layer_set_text_color(number_layer, GColorWhite);
+  text_layer_set_background_color(number_layer, GColorBlack);
+  layer_add_child(window_layer, text_layer_get_layer(number_layer));
 }
 
 static void config_window_unload(Window *window) {
