@@ -2,7 +2,7 @@
 
 static Window *main_window, *s_menu_window, *config_window;
 static MenuLayer *s_menu_layer;
-TextLayer *output_layer;
+TextLayer *output_layer, *number_layer;
 
 #define SCREEN_TEXT_GAP 14
 
@@ -564,6 +564,29 @@ void click_config_provider(void *context) {
 static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
+  
+  char window_number[MAX_TEXT_SIZE];
+  switch(currentScreen) {
+    case 0:
+      strcpy(window_number, "Screen 1");
+    break;
+    case 1:
+      strcpy(window_number, "Screen 2");
+    break;
+    case 2:
+      strcpy(window_number, "Screen 3");
+    break;
+    case 3:
+      strcpy(window_number, "Screen 4");
+    break;
+  }
+  number_layer = text_layer_create(GRect(0, 0, bounds.size.w, 19)); // Change if you use PEBBLE_SDK 3
+  text_layer_set_text(number_layer, window_number);
+  text_layer_set_text_alignment(number_layer, GTextAlignmentCenter);
+  text_layer_set_text_color(number_layer, GColorWhite);
+  text_layer_set_background_color(number_layer, GColorBlack);
+  layer_add_child(window_layer, text_layer_get_layer(number_layer));
+
 
   output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
   int cpt = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
