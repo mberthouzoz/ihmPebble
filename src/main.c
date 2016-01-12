@@ -288,25 +288,33 @@ void up_click_config_handler(ClickRecognizerRef recognizer, void *context) {
   } else {
     nbItem = nbItem + 1;
   }
-  APP_LOG(APP_LOG_LEVEL_INFO, "UP : Sending request id : %d", nbItem);
+  //APP_LOG(APP_LOG_LEVEL_INFO, "UP : Sending request id : %d", nbItem);
   
   int val = -1;
   switch(currentScreen) {
     case 0:
-      val = persist_read_int(PERSIST_SCREEN1);
+      if (persist_exists(PERSIST_SCREEN1)) {
+        val = persist_read_int(PERSIST_SCREEN1);
+      }
     break;
     case 1:
-      val = persist_read_int(PERSIST_SCREEN2);
+      if (persist_exists(PERSIST_SCREEN2)) {
+        val = persist_read_int(PERSIST_SCREEN2);
+      }
     break;
     case 2:
+      if (persist_exists(PERSIST_SCREEN3)) {
       val = persist_read_int(PERSIST_SCREEN3);
+      }
     break;
     case 3:
+    if (persist_exists(PERSIST_SCREEN4)) {
       val = persist_read_int(PERSIST_SCREEN4);
+    }
     break;
   }
   
-   APP_LOG(APP_LOG_LEVEL_INFO, "Before UP valid, %d, %d == %d", val, nbItem, val);
+   //APP_LOG(APP_LOG_LEVEL_INFO, "Before UP valid, %d, %d == %d", val, nbItem, val);
   
   if (val != -1 && nbItem == val) {
     text_layer_set_text_color(output_layer, GColorWhite);
@@ -382,20 +390,28 @@ void down_click_config_handler(ClickRecognizerRef recognizer, void *context) {
   } else {
     nbItem = nbItem - 1;
   }
-  APP_LOG(APP_LOG_LEVEL_INFO, "DOWN : Sending request id : %d", nbItem);
+  //APP_LOG(APP_LOG_LEVEL_INFO, "DOWN : Sending request id : %d", nbItem);
   int val = -1;
   switch(currentScreen) {
     case 0:
-      val = persist_read_int(PERSIST_SCREEN1);
+      if (persist_exists(PERSIST_SCREEN1)) {
+        val = persist_read_int(PERSIST_SCREEN1);
+      }
     break;
     case 1:
-      val = persist_read_int(PERSIST_SCREEN2);
+      if (persist_exists(PERSIST_SCREEN2)) {
+        val = persist_read_int(PERSIST_SCREEN2);
+      }
     break;
     case 2:
+      if (persist_exists(PERSIST_SCREEN3)) {
       val = persist_read_int(PERSIST_SCREEN3);
+      }
     break;
     case 3:
+    if (persist_exists(PERSIST_SCREEN4)) {
       val = persist_read_int(PERSIST_SCREEN4);
+    }
     break;
   }
   
@@ -472,23 +488,31 @@ void up_main_click_handler(ClickRecognizerRef recognizer, void *context) {
     currentScreen = currentScreen + 1;
   }
   int val = 0;
-  switch(currentScreen) {
+ switch(currentScreen) {
     case 0:
-      val = persist_read_int(PERSIST_SCREEN1);
+      if (persist_exists(PERSIST_SCREEN1)) {
+        val = persist_read_int(PERSIST_SCREEN1);
+      }
     break;
     case 1:
-      val = persist_read_int(PERSIST_SCREEN2);
+      if (persist_exists(PERSIST_SCREEN2)) {
+        val = persist_read_int(PERSIST_SCREEN2);
+      }
     break;
     case 2:
+      if (persist_exists(PERSIST_SCREEN3)) {
       val = persist_read_int(PERSIST_SCREEN3);
+      }
     break;
     case 3:
+    if (persist_exists(PERSIST_SCREEN4)) {
       val = persist_read_int(PERSIST_SCREEN4);
+    }
     break;
   }
   
   if (val < 13) {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", val);
+    //APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", val);
 	  send(val, "");
   }
   
@@ -503,21 +527,29 @@ void down_main_click_handler(ClickRecognizerRef recognizer, void *context) {
   int val = 0;
   switch(currentScreen) {
     case 0:
-      val = persist_read_int(PERSIST_SCREEN1);
+      if (persist_exists(PERSIST_SCREEN1)) {
+        val = persist_read_int(PERSIST_SCREEN1);
+      }
     break;
     case 1:
-      val = persist_read_int(PERSIST_SCREEN2);
+      if (persist_exists(PERSIST_SCREEN2)) {
+        val = persist_read_int(PERSIST_SCREEN2);
+      }
     break;
     case 2:
+      if (persist_exists(PERSIST_SCREEN3)) {
       val = persist_read_int(PERSIST_SCREEN3);
+      }
     break;
     case 3:
+    if (persist_exists(PERSIST_SCREEN4)) {
       val = persist_read_int(PERSIST_SCREEN4);
+    }
     break;
   }
   
   if (val < 13) {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", val);
+   // APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", val);
 	  send(val, "");
   }
   
@@ -533,10 +565,10 @@ static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  output_layer = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
+  output_layer = text_layer_create(GRect(0, 60, bounds.size.w, bounds.size.h)); // Change if you use PEBBLE_SDK 3
   int cpt = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
   if (cpt < 13) {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", cpt);
+    //APP_LOG(APP_LOG_LEVEL_INFO, "Nav send : %d", cpt);
 	  send(cpt, "");
   }
   text_layer_set_text_alignment(output_layer, GTextAlignmentCenter);
@@ -549,7 +581,7 @@ static void main_window_unload(Window *window) {
 
 static void config_click_handler(ClickRecognizerRef recognizer, void *context) {
   // Exit app after tea is done
-  APP_LOG(APP_LOG_LEVEL_INFO, "Current screen and nbItem : %d %d", currentScreen, nbItem);
+  //APP_LOG(APP_LOG_LEVEL_INFO, "Current screen and nbItem : %d %d", currentScreen, nbItem);
   switch(currentScreen) {
     case 0:
       persist_write_int(PERSIST_SCREEN1, nbItem);
@@ -589,24 +621,24 @@ static void config_window_load(Window *window) {
   int val = -1;
   switch(currentScreen) {
     case 0:
-      nbItem = persist_read_int(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
-      val = persist_read_int(PERSIST_SCREEN1);
+      nbItem = persist_exists(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : 0;
+      val = persist_exists(PERSIST_SCREEN1) ? persist_read_int(PERSIST_SCREEN1) : -1;
     break;
     case 1:
-      nbItem = persist_read_int(PERSIST_SCREEN2) ? persist_read_int(PERSIST_SCREEN2) : 0;
-      val = persist_read_int(PERSIST_SCREEN2);
+      nbItem = persist_exists(PERSIST_SCREEN2) ? persist_read_int(PERSIST_SCREEN2) : 0;
+      val = persist_exists(PERSIST_SCREEN2) ? persist_read_int(PERSIST_SCREEN2) : -1;
     break;
     case 2:
-      nbItem = persist_read_int(PERSIST_SCREEN3) ? persist_read_int(PERSIST_SCREEN3) : 0;
-      val = persist_read_int(PERSIST_SCREEN3);
+      nbItem = persist_exists(PERSIST_SCREEN3) ? persist_read_int(PERSIST_SCREEN3) : 0;
+      val = persist_exists(PERSIST_SCREEN3) ? persist_read_int(PERSIST_SCREEN3) : -1;
     break;
     case 3:
-      nbItem = persist_read_int(PERSIST_SCREEN4) ? persist_read_int(PERSIST_SCREEN4) : 0;
-      val = persist_read_int(PERSIST_SCREEN4);
+      nbItem = persist_exists(PERSIST_SCREEN4) ? persist_read_int(PERSIST_SCREEN4) : 0;
+      val = persist_exists(PERSIST_SCREEN4) ? persist_read_int(PERSIST_SCREEN4) : -1;
     break;
   }
   
-  APP_LOG(APP_LOG_LEVEL_INFO, "Config load : %d %d", currentScreen, nbItem);
+  //APP_LOG(APP_LOG_LEVEL_INFO, "Config load : %d %d", currentScreen, nbItem);
 
   if (val != -1 && nbItem == val) {
     text_layer_set_text_color(output_layer, GColorWhite);
@@ -680,10 +712,36 @@ static void config_window_unload(Window *window) {
   text_layer_destroy(output_layer);
 }
 
+void out_sent_handler(DictionaryIterator *sent, void *context){}
+static void out_fail_handler(DictionaryIterator *failed, AppMessageResult reason, void* context){}
+
+static void in_received_handler(DictionaryIterator *iter, void* context){}
+
+void in_drop_handler(AppMessageResult reason, void *context){}
+
 /**
  * Initializes
  */
 static void init(void) {
+
+  
+  // Subscribe to TickTimerService
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+  
+  // Subscribe to the accelerometer data service
+  accel_data_service_subscribe(NUM_ACCEL_SAMPLES, data_handler);
+  // Choose update rate
+  accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
+
+  app_message_register_inbox_received(received_handler);
+  app_message_register_outbox_sent(out_sent_handler);
+  app_message_register_inbox_dropped(in_drop_handler);
+  app_message_register_outbox_failed(out_fail_handler);
+  
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+
+  
+  
   main_window = window_create();
   window_set_click_config_provider(main_window, click_config_provider);
   window_set_window_handlers(main_window, (WindowHandlers) {
@@ -703,17 +761,6 @@ static void init(void) {
     .load = config_window_load,
     .unload = config_window_unload,
   });
-
-  // Subscribe to TickTimerService
-  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
-  
-  // Subscribe to the accelerometer data service
-  accel_data_service_subscribe(NUM_ACCEL_SAMPLES, data_handler);
-  // Choose update rate
-  accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
-
-  app_message_register_inbox_received(received_handler);
-  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
   
 static void deinit(void) {
